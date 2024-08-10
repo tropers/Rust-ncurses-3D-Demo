@@ -58,19 +58,19 @@ struct Mesh {
     triangles: Vec<Triangle>,
 }
 
-fn draw_line(window: &pancurses::Window, mut vec0: Vec2, mut vec1: Vec2) {
-    // Round the vectors coordinates to make it work with the algorithm
-    vec0 = vec0.round();
-    vec1 = vec1.round();
+fn draw_line(window: &pancurses::Window, vec0: &Vec2, vec1: &Vec2) {
+    // The vertices are rounded as a simple rasterization method
+    let mut vec0_rounded = vec0.round();
+    let vec1_rounded = vec1.round();
 
-    let dx = (vec1.x - vec0.x).abs();
-    let sx = match vec0.x < vec1.x {
+    let dx = (vec1_rounded.x - vec0_rounded.x).abs();
+    let sx = match vec0_rounded.x < vec1_rounded.x {
         true => 1.0,
         false => -1.0,
     };
 
-    let dy = -(vec1.y - vec0.y).abs();
-    let sy = match vec0.y < vec1.y {
+    let dy = -(vec1_rounded.y - vec0_rounded.y).abs();
+    let sy = match vec0_rounded.y < vec1_rounded.y {
         true => 1.0,
         false => -1.0,
     };
@@ -78,27 +78,27 @@ fn draw_line(window: &pancurses::Window, mut vec0: Vec2, mut vec1: Vec2) {
     let mut error = dx + dy;
 
     loop {
-        window.mvaddch(vec0.y.round() as i32, vec0.x.round() as i32, '*');
+        window.mvaddch(vec0_rounded.y as i32, vec0_rounded.x as i32, '*');
 
-        if vec0.x == vec1.x && vec0.y == vec1.y {
+        if vec0_rounded.x == vec1_rounded.x && vec0_rounded.y == vec1_rounded.y {
             break;
         }
 
         let e2 = 2.0 * error;
         if e2 >= dy {
-            if vec0.x == vec1.x {
+            if vec0_rounded.x == vec1_rounded.x {
                 break;
             }
             error = error + dy;
-            vec0.x = vec0.x + sx;
+            vec0_rounded.x = vec0_rounded.x + sx;
         }
 
         if e2 <= dx {
-            if vec0.y == vec1.y {
+            if vec0_rounded.y == vec1_rounded.y {
                 break;
             }
             error = error + dx;
-            vec0.y = vec0.y + sy;
+            vec0_rounded.y = vec0_rounded.y + sy;
         }
     }
 }
@@ -329,18 +329,18 @@ fn draw_triangle(window: &pancurses::Window, triangle: &Triangle) {
         TRIANGLE_VERTEX_COUNT => {
             draw_line(
                 window,
-                scaled_vertices[VERTEX_INDEX_1].clone(),
-                scaled_vertices[VERTEX_INDEX_2].clone(),
+                &scaled_vertices[VERTEX_INDEX_1],
+                &scaled_vertices[VERTEX_INDEX_2],
             );
             draw_line(
                 window,
-                scaled_vertices[VERTEX_INDEX_2].clone(),
-                scaled_vertices[VERTEX_INDEX_3].clone(),
+                &scaled_vertices[VERTEX_INDEX_2],
+                &scaled_vertices[VERTEX_INDEX_3],
             );
             draw_line(
                 window,
-                scaled_vertices[VERTEX_INDEX_1].clone(),
-                scaled_vertices[VERTEX_INDEX_3].clone(),
+                &scaled_vertices[VERTEX_INDEX_1],
+                &scaled_vertices[VERTEX_INDEX_3],
             );
         }
         _ => {
