@@ -1,6 +1,8 @@
 // Not all matrix transformation functions are used in this demo
 #![allow(dead_code)]
 
+use std::ops;
+
 const TRIANGLE_VERTEX_COUNT: usize = 3;
 const VERTEX_INDEX_1: usize = 0;
 const VERTEX_INDEX_2: usize = 1;
@@ -49,8 +51,7 @@ impl Vec3 {
             ],
         };
 
-        
-        proj_matrix.multiply_vec3(self)
+        proj_matrix * self
     }
 
     fn rotate_x(&self, theta: f32) -> Vec3 {
@@ -63,7 +64,7 @@ impl Vec3 {
             ],
         };
 
-        rotate_x_matrix.multiply_vec3(self)
+        rotate_x_matrix * self
     }
 
     fn rotate_y(&self, theta: f32) -> Vec3 {
@@ -76,7 +77,7 @@ impl Vec3 {
             ],
         };
 
-        rotate_z_matrix.multiply_vec3(self)
+        rotate_z_matrix * self
     }
 
     fn rotate_z(&self, theta: f32) -> Vec3 {
@@ -89,7 +90,7 @@ impl Vec3 {
             ],
         };
 
-        rotate_z_matrix.multiply_vec3(self)
+        rotate_z_matrix * self
     }
 
     fn translate_x(&self, x: f32) -> Vec3 {
@@ -138,26 +139,28 @@ struct Matrix4x4 {
     data: [[f32; 4]; 4],
 }
 
-impl Matrix4x4 {
-    fn multiply_vec3(&self, vec: &Vec3) -> Vec3 {
+impl ops::Mul<&Vec3> for Matrix4x4 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: &Vec3) -> Self::Output {
         let mut return_vector = Vec3 {
-            x: vec.x * &self.data[0][0]
-                + vec.y * &self.data[1][0]
-                + vec.z * &self.data[2][0]
+            x: rhs.x * &self.data[0][0]
+                + rhs.y * &self.data[1][0]
+                + rhs.z * &self.data[2][0]
                 + &self.data[3][0],
-            y: vec.x * &self.data[0][1]
-                + vec.y * &self.data[1][1]
-                + vec.z * &self.data[2][1]
+            y: rhs.x * &self.data[0][1]
+                + rhs.y * &self.data[1][1]
+                + rhs.z * &self.data[2][1]
                 + &self.data[3][1],
-            z: vec.x * &self.data[0][2]
-                + vec.y * &self.data[1][2]
-                + vec.z * &self.data[2][2]
+            z: rhs.x * &self.data[0][2]
+                + rhs.y * &self.data[1][2]
+                + rhs.z * &self.data[2][2]
                 + &self.data[3][2],
         };
 
-        let w = vec.x * &self.data[0][3]
+        let w = rhs.x * &self.data[0][3]
             + &self.data[1][3]
-            + vec.z * &self.data[2][3]
+            + rhs.z * &self.data[2][3]
             + &self.data[3][3];
 
         if w != 0.0 {
@@ -325,7 +328,7 @@ impl Mesh {
                 .collect(),
         }
     }
-    
+
     fn rotate_x(&self, theta: f32) -> Mesh {
         Mesh {
             triangles: self
@@ -335,7 +338,7 @@ impl Mesh {
                 .collect(),
         }
     }
-    
+
     fn rotate_y(&self, theta: f32) -> Mesh {
         Mesh {
             triangles: self
@@ -345,7 +348,7 @@ impl Mesh {
                 .collect(),
         }
     }
-    
+
     fn rotate_z(&self, theta: f32) -> Mesh {
         Mesh {
             triangles: self
@@ -355,7 +358,7 @@ impl Mesh {
                 .collect(),
         }
     }
-    
+
     fn translate_x(&self, x: f32) -> Mesh {
         Mesh {
             triangles: self
@@ -365,7 +368,7 @@ impl Mesh {
                 .collect(),
         }
     }
-    
+
     fn translate_y(&self, y: f32) -> Mesh {
         Mesh {
             triangles: self
@@ -375,7 +378,7 @@ impl Mesh {
                 .collect(),
         }
     }
-    
+
     fn translate_z(&self, z: f32) -> Mesh {
         Mesh {
             triangles: self
@@ -385,7 +388,7 @@ impl Mesh {
                 .collect(),
         }
     }
-    
+
     fn draw(&self, window: &pancurses::Window) {
         self.triangles.iter().for_each(|triangle| {
             triangle.draw(window)
