@@ -427,16 +427,16 @@ fn draw_line(window: &pancurses::Window, vec0: &Vec2, vec1: &Vec2) {
             if vec0_rounded.x == vec1_rounded.x {
                 break;
             }
-            error = error + dy;
-            vec0_rounded.x = vec0_rounded.x + sx;
+            error += dy;
+            vec0_rounded.x += sx;
         }
 
         if e2 <= dx {
             if vec0_rounded.y == vec1_rounded.y {
                 break;
             }
-            error = error + dx;
-            vec0_rounded.y = vec0_rounded.y + sy;
+            error += dx;
+            vec0_rounded.y += sy;
         }
     }
 }
