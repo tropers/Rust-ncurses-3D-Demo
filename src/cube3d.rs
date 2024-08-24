@@ -144,24 +144,24 @@ impl ops::Mul<&Vec3> for Matrix4x4 {
 
     fn mul(self, rhs: &Vec3) -> Self::Output {
         let mut return_vector = Vec3 {
-            x: rhs.x * &self.data[0][0]
-                + rhs.y * &self.data[1][0]
-                + rhs.z * &self.data[2][0]
-                + &self.data[3][0],
-            y: rhs.x * &self.data[0][1]
-                + rhs.y * &self.data[1][1]
-                + rhs.z * &self.data[2][1]
-                + &self.data[3][1],
-            z: rhs.x * &self.data[0][2]
-                + rhs.y * &self.data[1][2]
-                + rhs.z * &self.data[2][2]
-                + &self.data[3][2],
+            x: rhs.x * self.data[0][0]
+                + rhs.y * self.data[1][0]
+                + rhs.z * self.data[2][0]
+                + self.data[3][0],
+            y: rhs.x * self.data[0][1]
+                + rhs.y * self.data[1][1]
+                + rhs.z * self.data[2][1]
+                + self.data[3][1],
+            z: rhs.x * self.data[0][2]
+                + rhs.y * self.data[1][2]
+                + rhs.z * self.data[2][2]
+                + self.data[3][2],
         };
 
-        let w = rhs.x * &self.data[0][3]
-            + &self.data[1][3]
-            + rhs.z * &self.data[2][3]
-            + &self.data[3][3];
+        let w = rhs.x * self.data[0][3]
+            + self.data[1][3]
+            + rhs.z * self.data[2][3]
+            + self.data[3][3];
 
         if w != 0.0 {
             return_vector.x /= w;
@@ -780,7 +780,7 @@ pub fn run_cube_demo(window: &pancurses::Window) {
             .project()
             .draw(window);
 
-        draw_text(&window, t);
+        draw_text(window, t);
 
         // Move cursor out of the way
         unsafe {

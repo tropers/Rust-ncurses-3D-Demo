@@ -1,7 +1,7 @@
 const PALETTE: [char; 16] = ['.', ',', ';', '\'', '"', '<', '>', '/', '(', ')', '{', '}', '&', '%', '#', '@'];
 
 // Plasma effect function used and adapted from https://rosettacode.org/wiki/Plasma_effect
-fn generate_plasma(plasma_vec: &mut Vec<f32>, screen_height: f32, screen_width: f32, t: f32) {
+fn generate_plasma(plasma_vec: &mut [f32], screen_height: f32, screen_width: f32, t: f32) {
     if plasma_vec.len() < (screen_height * screen_height) as usize {
         panic!("Plasma vector has incorrect size!");
     }
@@ -11,10 +11,10 @@ fn generate_plasma(plasma_vec: &mut Vec<f32>, screen_height: f32, screen_width: 
             plasma_vec[(y * screen_height as i32 + x) as usize] = (
                 128.0 + (128.0 * f32::sin((x as f32/ 8.0) - f32::cos(t / 2.0)))
                 + 128.0 + (128.0 * f32::sin((y as f32 / 16.0) - f32::sin(t) * 2.0))
-                + 128.0 + (128.0 * f32::sin(f32::sqrt((x as f32 - screen_width as f32
-                    / 2.0) * (x as f32 - screen_width as f32 / 2.0)
-                    + (y as f32 - screen_height as f32 / 2.0)
-                    * (y as f32 - screen_height as f32 / 2.0)) / 4.0))
+                + 128.0 + (128.0 * f32::sin(f32::sqrt((x as f32 - screen_width
+                    / 2.0) * (x as f32 - screen_width / 2.0)
+                    + (y as f32 - screen_height / 2.0)
+                    * (y as f32 - screen_height / 2.0)) / 4.0))
                 + 128.0 + (128.0 * f32::sin(
                     (f32::sqrt(x as f32 * x as f32 + y as f32 * y as f32) / 4.0)
                     - f32::sin(t / 4.0)))

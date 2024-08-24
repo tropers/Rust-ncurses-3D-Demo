@@ -13,10 +13,10 @@ fn main() {
     to be used later in the calculations for cube3d and plasma.
     */
     unsafe {
-        (SCREEN_HEIGHT, SCREEN_WIDTH) = (|| -> (f32, f32) {
+        (SCREEN_HEIGHT, SCREEN_WIDTH) = {
             let (y, x) = window.get_max_yx();
             (y as f32, x as f32)
-        })();
+        };
     }
 
     cube3d::run_cube_demo(&window);
