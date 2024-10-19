@@ -458,7 +458,7 @@ fn draw_text(window: &pancurses::Window, theta: f32) {
 }
 
 fn create_cube() -> Mesh {
-    return Mesh {
+    Mesh {
         triangles: Vec::from([
             // SOUTH
             Triangle {
@@ -767,7 +767,7 @@ fn create_cube() -> Mesh {
                 ],
             },
         ]),
-    };
+    }
 }
 
 pub fn run_cube_demo(window: &pancurses::Window) {
