@@ -457,8 +457,8 @@ fn draw_text(window: &pancurses::Window, theta: f32) {
     window.attroff(pancurses::A_BOLD);
 }
 
-pub fn run_cube_demo(window: &pancurses::Window) {
-    let cube = Mesh {
+fn create_cube() -> Mesh {
+    return Mesh {
         triangles: Vec::from([
             // SOUTH
             Triangle {
@@ -768,6 +768,10 @@ pub fn run_cube_demo(window: &pancurses::Window) {
             },
         ]),
     };
+}
+
+pub fn run_cube_demo(window: &pancurses::Window) {
+    let cube = create_cube();
 
     let mut t: f32 = 0.0;
     let mut clear = true;
