@@ -1,4 +1,6 @@
-const PALETTE: [char; 16] = ['.', ',', ';', '\'', '"', '<', '>', '/', '(', ')', '{', '}', '&', '%', '#', '@'];
+const PALETTE: [char; 16] = [
+    '.', ',', ';', '\'', '"', '<', '>', '/', '(', ')', '{', '}', '&', '%', '#', '@',
+];
 
 // Plasma effect function used and adapted from https://rosettacode.org/wiki/Plasma_effect
 fn generate_plasma(plasma_vec: &mut [f32], screen_height: f32, screen_width: f32, t: f32) {
@@ -8,17 +10,26 @@ fn generate_plasma(plasma_vec: &mut [f32], screen_height: f32, screen_width: f32
 
     for y in 0..screen_height as i32 {
         for x in 0..screen_width as i32 {
-            plasma_vec[(y * screen_height as i32 + x) as usize] = (
-                128.0 + (128.0 * f32::sin((x as f32/ 8.0) - f32::cos(t / 2.0)))
-                + 128.0 + (128.0 * f32::sin((y as f32 / 16.0) - f32::sin(t) * 2.0))
-                + 128.0 + (128.0 * f32::sin(f32::sqrt((x as f32 - screen_width
-                    / 2.0) * (x as f32 - screen_width / 2.0)
-                    + (y as f32 - screen_height / 2.0)
-                    * (y as f32 - screen_height / 2.0)) / 4.0))
-                + 128.0 + (128.0 * f32::sin(
-                    (f32::sqrt(x as f32 * x as f32 + y as f32 * y as f32) / 4.0)
-                    - f32::sin(t / 4.0)))
-            ) / 4.0;
+            plasma_vec[(y * screen_height as i32 + x) as usize] = (128.0
+                + (128.0 * f32::sin((x as f32 / 8.0) - f32::cos(t / 2.0)))
+                + 128.0
+                + (128.0 * f32::sin((y as f32 / 16.0) - f32::sin(t) * 2.0))
+                + 128.0
+                + (128.0
+                    * f32::sin(
+                        f32::sqrt(
+                            (x as f32 - screen_width / 2.0) * (x as f32 - screen_width / 2.0)
+                                + (y as f32 - screen_height / 2.0)
+                                    * (y as f32 - screen_height / 2.0),
+                        ) / 4.0,
+                    ))
+                + 128.0
+                + (128.0
+                    * f32::sin(
+                        (f32::sqrt(x as f32 * x as f32 + y as f32 * y as f32) / 4.0)
+                            - f32::sin(t / 4.0),
+                    )))
+                / 4.0;
         }
     }
 }
@@ -28,13 +39,18 @@ fn draw_text(window: &pancurses::Window, screen_height: f32, screen_width: f32) 
 
     window.attron(pancurses::A_BLINK | pancurses::A_BOLD);
     for y in (screen_height as i32 / 2 - 1)..(screen_height as i32 / 2) + 2 {
-        for x in (screen_width as i32 / 2 - (msg.len()) as i32)..
-                      (screen_width as i32 / 2 + msg.len() as i32) {
+        for x in (screen_width as i32 / 2 - (msg.len()) as i32)
+            ..(screen_width as i32 / 2 + msg.len() as i32)
+        {
             window.mvaddch(y, x, ' ');
         }
     }
 
-    window.mvaddstr(screen_height as i32 / 2, screen_width as i32 / 2 - (msg.len() as i32 / 2), msg);
+    window.mvaddstr(
+        screen_height as i32 / 2,
+        screen_width as i32 / 2 - (msg.len() as i32 / 2),
+        msg,
+    );
     window.mv(screen_height as i32 - 1, screen_width as i32 - 1);
     window.attroff(pancurses::A_BLINK | pancurses::A_BOLD);
 }
@@ -100,9 +116,8 @@ pub fn run_plasma_demo(window: &pancurses::Window) {
     // plasma for the simulation.
     let time_now = || -> std::time::Duration {
         std::time::SystemTime::now()
-                                .duration_since(
-                                    std::time::SystemTime::UNIX_EPOCH
-                                ).unwrap()
+            .duration_since(std::time::SystemTime::UNIX_EPOCH)
+            .unwrap()
     };
 
     let start_time = time_now();
@@ -124,11 +139,14 @@ pub fn run_plasma_demo(window: &pancurses::Window) {
 
         for y in 0..screen_height as i32 {
             for x in 0..screen_width as i32 {
-                    window.mvaddch(y, x,
-                            PALETTE[((plasma[(y * screen_height as i32 + x) as usize].round() as i32
-                                + ((now * 100.0) as i32))
-                                / PALETTE.len() as i32
-                                % PALETTE.len() as i32) as usize]);
+                window.mvaddch(
+                    y,
+                    x,
+                    PALETTE[((plasma[(y * screen_height as i32 + x) as usize].round() as i32
+                        + ((now * 100.0) as i32))
+                        / PALETTE.len() as i32
+                        % PALETTE.len() as i32) as usize],
+                );
             }
         }
 

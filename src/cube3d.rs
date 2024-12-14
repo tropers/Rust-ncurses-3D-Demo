@@ -158,10 +158,8 @@ impl ops::Mul<&Vec3> for Matrix4x4 {
                 + self.data[3][2],
         };
 
-        let w = rhs.x * self.data[0][3]
-            + self.data[1][3]
-            + rhs.z * self.data[2][3]
-            + self.data[3][3];
+        let w =
+            rhs.x * self.data[0][3] + self.data[1][3] + rhs.z * self.data[2][3] + self.data[3][3];
 
         if w != 0.0 {
             return_vector.x /= w;
@@ -390,9 +388,9 @@ impl Mesh {
     }
 
     fn draw(&self, window: &pancurses::Window) {
-        self.triangles.iter().for_each(|triangle| {
-            triangle.draw(window)
-        });
+        self.triangles
+            .iter()
+            .for_each(|triangle| triangle.draw(window));
     }
 }
 
@@ -777,8 +775,7 @@ pub fn run_cube_demo(window: &pancurses::Window) {
     let mut clear = true;
 
     while t < 10.0 {
-        cube
-            .rotate_y(t)
+        cube.rotate_y(t)
             .rotate_z(t)
             .translate_z(2.5)
             .project()
